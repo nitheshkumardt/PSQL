@@ -1,0 +1,41 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class SubQurey {
+    public static String qurey;
+    public static void secondMaxMark(Statement statement) throws SQLException {
+        qurey="Select max(mark) as mark from Student_details where mark!=(select max(mark) from Student_details)";
+        ResultSet resultSet=statement.executeQuery(qurey);
+        resultSet.next();
+        System.out.println("Second Maximum Mark-->"+resultSet.getInt("mark"));
+    }
+    public static void getNameByAddress(Statement statement) throws SQLException {
+        System.out.println("\nStudents Living in tirupur:::\n");
+        qurey="select name from Student where id in (select id from Student_details where address='Tirupur')";
+        ResultSet resultSet=statement.executeQuery(qurey);
+        while (resultSet.next())
+            System.out.println(resultSet.getString(1));
+    }
+    public static void increasetheMark(Statement statement) throws SQLException {
+        System.out.println("\nincrease the Students Mark:::\n");
+        qurey="update Student_details set mark=mark-10 where id in (select id from Student where department='CSE')";
+        statement.executeUpdate(qurey);
+        qurey="select * from Student_details";
+        ResultSet resultSet=statement.executeQuery(qurey);
+        while (resultSet.next())
+            System.out.println(resultSet.getInt(1)
+                    + " " + resultSet.getInt(2)
+                    + " " + resultSet.getInt(3)
+                    + " " + resultSet.getString(4));
+    }
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Connection con;
+        con =ConnectDatabase.getConnection();
+        Statement statement=con.createStatement();
+        secondMaxMark(statement);
+        getNameByAddress(statement);
+        increasetheMark(statement);
+    }
+}
