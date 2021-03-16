@@ -1,0 +1,68 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class ClausePsql {
+    public static void likeClause(Statement statement) throws SQLException {
+        System.out.println("\nUsing Like Clause[%i%]:::\n");
+        ResultSet resultSet=statement.executeQuery("Select *from Student where name like '%i%'");
+        while (resultSet.next())
+            System.out.println(resultSet.getInt(1)
+                    + " " + resultSet.getString(2)
+                    + " " + resultSet.getString(3));
+    }
+    public static void whereClause(Statement statement) throws SQLException {
+        System.out.println("\nUsing Where Clause[CSE]:::\n");
+        ResultSet resultSet = statement.executeQuery("Select name from Student where department='CSE'");
+        while (resultSet.next())
+            System.out.println(resultSet.getString("name"));
+    }
+    public static void limitClause(Statement statement) throws SQLException {
+        System.out.println("\nUsing Limit Clause[4]:::\n");
+        ResultSet resultSet=statement.executeQuery("Select * from Student Limit 4 offset 3");
+        while (resultSet.next())
+            System.out.println(resultSet.getInt(1)
+                    + " " + resultSet.getString(2)
+                    + " " + resultSet.getString(3));
+    }
+    public static void orderByClause(Statement statement) throws SQLException {
+        System.out.println("\nUsing Order by Clause[Order BY]:::\n");
+        ResultSet resultSet=statement.executeQuery("Select *from Student order by department");
+        while (resultSet.next())
+            System.out.println(resultSet.getInt(1)
+                    + " " + resultSet.getString(2)
+                    + " " + resultSet.getString(3));
+    }
+    public static void groupByClause(Statement statement) throws SQLException {
+        System.out.println("\nUsing Group By Clause[Department]:::\n");
+        ResultSet resultSet=statement.executeQuery("Select department,count(id) from Student group by department");
+        while (resultSet.next())
+            System.out.println(resultSet.getString(1)+" "+resultSet.getInt(2));
+    }
+    public static void havingClause(Statement statement) throws SQLException {
+        System.out.println("\nUsing Having Clause[Department Count>2]:::\n");
+        ResultSet resultSet=statement.executeQuery("Select department from Student group by department having count(id)>2");
+        while (resultSet.next())
+            System.out.println(resultSet.getString("department"));
+    }
+    public static void withAndDistintClause(Statement statement) throws SQLException {
+        System.out.println("\nUsing With and  DISTINCT Clause[Department]:::\n");
+        ResultSet resultSet = statement.executeQuery("With Department as (select distinct department from Student )Select * from Department");
+        while (resultSet.next()) {
+            System.out.println(resultSet.getString("department"));
+        }
+    }
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Connection con;
+        con =ConnectDatabase.getConnection();
+        Statement statement=con.createStatement();
+        likeClause(statement);
+        whereClause(statement);
+        limitClause(statement);
+        orderByClause(statement);
+        groupByClause(statement);
+        havingClause(statement);
+        withAndDistintClause(statement);
+    }
+}
