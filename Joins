@@ -1,0 +1,73 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Joins {
+    public static void innerJoin(Statement statement) throws SQLException {
+        System.out.println("\nUsing Inner Join:::\n");
+        ResultSet resultSet;
+        resultSet = statement.executeQuery("Select Student.id,name,age from" +
+                " Student inner join Student_details ON Student.id=Student_details.id");
+        while (resultSet.next()){
+            System.out.println(resultSet.getInt(1)+
+                    " "+resultSet.getString(2)+
+                    "    "+resultSet.getInt(3));
+        }
+    }
+    public static void leftJoin(Statement statement) throws SQLException {
+        System.out.println("\nUsing Left Join:::\n");
+        ResultSet resultSet;
+        resultSet = statement.executeQuery("Select Student.id,name,age from" +
+                " Student left join Student_details ON Student.id=Student_details.id");
+        while (resultSet.next()){
+            System.out.println(resultSet.getInt(1)+
+                    " "+resultSet.getString(2)+
+                    "   "+resultSet.getInt(3));
+        }
+    }
+    public static void rightJoin(Statement statement) throws SQLException {
+        System.out.println("\nUsing Right Join:::\n");
+        ResultSet resultSet;
+        resultSet = statement.executeQuery("Select Student_details.id,name,age from" +
+                " Student right join Student_details ON Student.id=Student_details.id");
+        while (resultSet.next()){
+            System.out.println(resultSet.getInt(1)+
+                    " "+resultSet.getString(2)+
+                    "   "+resultSet.getInt(3));
+        }
+    }
+
+    public static void fullOuterJoin(Statement statement) throws SQLException {
+        System.out.println("\nUsing full Join:::\n");
+        ResultSet resultSet;
+        resultSet = statement.executeQuery("Select Student_details.id,name,age from" +
+                " Student full join Student_details On Student.id=Student_details.id");
+        while (resultSet.next()){
+            System.out.println(resultSet.getInt(1)+
+                    " "+resultSet.getString(2)+
+                    "   "+resultSet.getInt(3));
+        }
+    }
+    public static void crossJoin(Statement statement) throws SQLException {
+        System.out.println("\nUsing Cross Join:::\n");
+        ResultSet resultSet;
+        resultSet = statement.executeQuery("Select Student_details.id,name,age from" +
+                " Student cross join Student_details");
+        while (resultSet.next()){
+            System.out.println(resultSet.getInt(1)+
+                    " "+resultSet.getString(2)+
+                    "   "+resultSet.getInt(3));
+        }
+    }
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Connection con;
+        con =ConnectDatabase.getConnection();
+        Statement statement=con.createStatement();
+        innerJoin(statement);
+        leftJoin(statement);
+        rightJoin(statement);
+        fullOuterJoin(statement);
+        crossJoin(statement);
+    }
+}
