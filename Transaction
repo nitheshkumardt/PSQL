@@ -1,0 +1,48 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class TransactionEg {
+    public static void display(Statement statement) throws SQLException {
+        ResultSet resultSet=statement.executeQuery("Select *from Student order by id");
+        while (resultSet.next())
+            System.out.println(resultSet.getInt(1)
+                    + " " + resultSet.getString(2)
+                    + " " + resultSet.getString(3));
+    }
+    public static void withoutSavepoint(Statement statement) throws SQLException {
+        statement.executeUpdate("Begin");
+        statement.executeUpdate("Delete from student where id=104");
+        System.out.println("\nAfter Deleting Details of Id[104]:::\n");
+        display(statement);
+        statement.executeUpdate("Delete from student where id=107");
+        System.out.println("\nAfter Deleting Details of Id[107]:::\n");
+        display(statement);
+        statement.executeUpdate("rollback");
+        System.out.println("\nAfter rollback:::\n");
+        display(statement);
+    }
+    public static void withSavePoint(Statement statement) throws SQLException {
+        statement.executeUpdate("Begin");
+        statement.executeUpdate("Savepoint s0");
+        statement.executeUpdate("Delete from student where id=104");
+        statement.executeUpdate("Savepoint s1");
+        System.out.println("\nAfter Deleting Details of Id[104]:::\n");
+        display(statement);
+        statement.executeUpdate("Delete from student where id=107");
+        statement.executeUpdate("Savepoint s1");
+        System.out.println("\nAfter Deleting Details of Id[107]:::\n");
+        display(statement);
+        statement.executeUpdate("rollback to s1");
+        System.out.println("\nAfter rollback:::\n");
+        display(statement);
+    }
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Connection con;
+        con =ConnectDatabase.getConnection();
+        Statement statement=con.createStatement();
+        withoutSavepoint(statement);
+        withSavePoint(statement);
+    }
+}
