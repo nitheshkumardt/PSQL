@@ -1,0 +1,55 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class sample {
+    public static void creatTable(Statement statement) throws SQLException {
+        //String query="Create table Student (id Integer,name text,department varchar(20))";
+        String query="Create table Student_details (id Integer,age integer,mark integer,address varchar(20))";
+        statement.executeUpdate(query);
+        System.out.println("Table Created Successfully");
+    }
+    public static void insertValue(Statement statement) throws SQLException {
+        //String query="Insert into Student values(101,'Abiseck','IT')";
+        //String query="Insert into Student values(102,'Bala','CSE'),(103,'Chandru','ECE'),(104,'Dhivagar','IT'),(104,'Elakiya','CSE')";
+        //String query="Insert into Student values(106,'Gowtham','CSE'),(107,'Hari Krishana','ECE'),(108,'Indrajith','IT'),(109,'Jeffrin','IT'),(109,'Kavin Kumar','EEE')";
+        String query="Insert into Student_details values(101,21,79,'Tirupur')" +
+                ",(103,20,65,'Coimbatore')" +
+                ",(102,21,55,'Erode')" +
+                ",(109,19,99,'Karur')" +
+                ",(110,21,100,'Tirupur')";
+        statement.executeUpdate(query);
+    }
+    public static void display(Statement statement) throws SQLException {
+        ResultSet resultSet=statement.executeQuery("Select *from Student_details");
+        while (resultSet.next())
+            System.out.println(resultSet.getInt(1)
+                    + " " + resultSet.getInt(2)
+                    + " " + resultSet.getInt(3)
+                    + " " + resultSet.getString(4));
+    }
+    public static void alterRowContent(Statement statement) throws SQLException {
+        //String query="Update Student set id=105 where name='Elakiya'";
+        //String query="Update Student set id=110 where name='Kavin Kumar'";
+        String query="Update Student set department='IT' where id=110";
+        statement.executeUpdate(query);
+    }
+    public static void alterColumn(Statement statement) throws SQLException {
+        //String query="Alter table Student add primary key(id)";
+        String query="Alter table Student_details add foreign key(id) references Student(id);";
+        statement.executeUpdate(query);
+        System.out.println("Primary Key Set Successfully");
+    }
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Connection con;
+        con =ConnectDatabase.getConnection();
+        Statement statement=con.createStatement();
+        //creatTable(statement);
+        //insertValue(statement);
+        //alterRowContent(statement);
+        alterColumn(statement);
+        //display(statement);
+    }
+}
+
